@@ -16,6 +16,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         database: configService.get<string>('MYSQL_DATABASE'),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true, // Set to false in production
+        logging: true, // Enable query logging
+        logger: 'advanced-console', // Use advanced console logger
+        maxQueryExecutionTime: 1000 // Log queries that take more than 1 second
       }),
     }),
   ],

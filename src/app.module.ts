@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { DocumentsModule } from './documents/documents.module';
 import { VendorsModule } from './vendors/vendors.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { VendorsModule } from './vendors/vendors.module';
     AuthModule,
     DocumentsModule,
     VendorsModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

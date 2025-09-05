@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Project } from './project.entity';
+import { Vendor } from '../../vendors/entities/vendor.entity';
 
 @Entity('vendor_matches')
 @Index(['projectId', 'vendorId'], { unique: true })
@@ -28,6 +29,10 @@ export class VendorMatch {
   @ManyToOne(() => Project, project => project.vendorMatches, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'projectId' })
   project: Project;
+
+  @ManyToOne(() => Vendor, vendor => vendor.vendorMatches, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'vendorId' })
+  vendor: Vendor;
 
   constructor(partial: Partial<VendorMatch>) {
     Object.assign(this, partial);

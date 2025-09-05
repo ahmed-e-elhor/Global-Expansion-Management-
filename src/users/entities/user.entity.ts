@@ -4,6 +4,7 @@ import { IsEmail, IsEnum, IsNotEmpty, IsString, MinLength } from 'class-validato
 export enum UserRole {
   CLIENT = 'client',
   ADMIN = 'admin',
+  ANALYST = 'analyst',
 }
 
 @Entity('users')

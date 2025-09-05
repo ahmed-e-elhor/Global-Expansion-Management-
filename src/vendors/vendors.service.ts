@@ -24,9 +24,7 @@ export class VendorsService {
   }
 
   async findAll(): Promise<Vendor[]> {
-    return this.vendorRepository.find({
-      relations: ['user'],
-    });
+    return this.vendorRepository.find();
   }
 
   async findOne(id: string): Promise<Vendor> {
