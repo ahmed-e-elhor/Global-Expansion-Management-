@@ -1,95 +1,63 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Global Expansion Management Platform
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Overview
 
-## Description
+A comprehensive platform for managing global vendor relationships, projects, and compliance documentation.
 
-Global Expansion Management is a comprehensive platform built with [NestJS](https://github.com/nestjs/nest) for managing vendor relationships, projects, and compliance documentation.
+## Documentation
+
+- [Setup Guide](./docs/SETUP.md)
+- [API Reference](./docs/API.md)
+- [Database Schema](./docs/SCHEMA.md)
+- [Matching Algorithm](./docs/MATCHING.md)
+
+## Quick Start
+
+1. **Clone and install dependencies**
+   ```bash
+   https://github.com/ahmed-e-elhor/Global-Expansion-Management-.git
+   cd global-expansion-management
+   npm install
+   ```
+
+2. **Set up environment**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+3. **Run the application**
+   ```bash
+   # Development
+   npm run start:dev
+   
+   # Production
+   npm run build
+   npm run start:prod
+   ```
 
 ## Features
 
-- **Vendor Management**: Track and manage vendor information and compliance documents
-- **Project Management**: Manage projects and their associated vendors
-- **Document Management**: Store and organize vendor documents and compliance certificates
-- **Email Notifications**: Automatic email notifications for matches and SLA expirations
-- **Scheduled Tasks**: Automated daily tasks for refreshing matches and checking SLAs
+- Vendor and Project Management
+- Document Compliance Tracking
+- Automated Vendor Matching
+- Email Notifications
+- Analytics Dashboard
 
-## Project Setup
+## License
 
-### Prerequisites
+MIT 
 
-- Node.js (v16 or later)
-- npm or yarn
-- MySQL database
-- Redis (for background jobs)
-- Mailgun account (for email notifications)
-
-### Installation
-
-1. Clone the repository
-2. Install dependencies:
-
-```bash
-npm install
-$ npm install
-```
-
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Mau makes deployment straightforward and fast, requiring just a few simple steps:
 
 ```bash
 $ npm install -g @nestjs/mau
 $ mau deploy
 ```
-
 With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
 ## Resources
