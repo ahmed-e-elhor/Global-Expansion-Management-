@@ -1,6 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
-import { Match } from '../../matches/entities/match.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { VendorMatch } from '../../projects/entities/vendor-match.entity';
 
 @Entity('vendors')
@@ -25,13 +23,6 @@ export class Vendor {
 
   @Column({ name: 'response_sla_hours' })
   responseSlaHours: number;
-
-  // @OneToOne(() => User)
-  // @JoinColumn()
-  // user: User;
-
-  @OneToMany(() => Match, match => match.vendor)
-  matches: Match[];
 
   @OneToMany(() => VendorMatch, vendorMatch => vendorMatch.vendor)
   vendorMatches: VendorMatch[];

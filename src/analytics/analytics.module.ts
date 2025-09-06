@@ -5,14 +5,14 @@ import { AnalyticsController } from './analytics.controller';
 import { AnalyticsService } from './analytics.service';
 import { Project } from '../projects/entities/project.entity';
 import { Vendor } from '../vendors/entities/vendor.entity';
-import { Match } from '../matches/entities/match.entity';
+
 import { VendorMatch } from '../projects/entities/vendor-match.entity';
 import { DocumentModel, DocumentSchema } from '../documents/schemas/document.schema';
 import { ProjectsModule } from 'src/projects/projects.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Project, Vendor, Match, VendorMatch]),
+    TypeOrmModule.forFeature([Project, Vendor, VendorMatch]),
     MongooseModule.forFeature([
       { name: DocumentModel.name, schema: DocumentSchema },
     ]),

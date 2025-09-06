@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
-import { Match } from '../matches/entities/match.entity';
+import { Repository } from 'typeorm';
 import { Project, ProjectStatus } from '../projects/entities/project.entity';
-import { Vendor } from '../vendors/entities/vendor.entity';
 import { CountryAnalyticsDTO, TopVendorDTO } from './dto/top-vendors.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -13,9 +11,7 @@ import { VendorMatch } from 'src/projects/entities/vendor-match.entity';
 @Injectable()
 export class AnalyticsService {
   constructor(
-    private readonly dataSource: DataSource,
     @InjectRepository(Project) private readonly projectRepo: Repository<Project>,
-    @InjectRepository(Vendor) private readonly vendorRepo: Repository<Vendor>,
     @InjectRepository(VendorMatch) private readonly vendorMatchRepo: Repository<VendorMatch>,
     @InjectModel(DocumentModel.name) private readonly documentModel: Model<DocumentModel>,
   ) {}
