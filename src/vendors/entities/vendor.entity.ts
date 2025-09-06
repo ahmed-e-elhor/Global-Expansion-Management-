@@ -20,6 +20,9 @@ export class Vendor {
   @Column({ type: 'decimal', precision: 3, scale: 2, default: 0 })
   rating: number;
 
+  @Column({type: 'enum', enum: ['ACTIVE', 'SLA_EXPIRED'], default: 'ACTIVE' })
+  status: string;
+
   @Column({ name: 'response_sla_hours' })
   responseSlaHours: number;
 

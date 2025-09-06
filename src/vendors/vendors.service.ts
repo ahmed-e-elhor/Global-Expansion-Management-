@@ -4,13 +4,14 @@ import { Repository } from 'typeorm';
 import { Vendor } from './entities/vendor.entity';
 import { CreateVendorDto } from './dto/create-vendor.dto';
 import { User } from '../users/entities/user.entity';
+import { UpdateResult } from 'typeorm/browser';
 
 @Injectable()
 export class VendorsService {
   constructor(
     @InjectRepository(Vendor)
     private readonly vendorRepository: Repository<Vendor>,
-  ) {}
+  ) { }
 
   async create(createVendorDto: CreateVendorDto): Promise<Vendor> {
     // Ensure rating is a number and has a default value if not provided
@@ -18,7 +19,7 @@ export class VendorsService {
       ...createVendorDto,
       rating: createVendorDto.rating || 0,
     };
-    
+
     const vendor = this.vendorRepository.create(vendorData);
     return this.vendorRepository.save(vendor);
   }
@@ -32,11 +33,26 @@ export class VendorsService {
       where: { id },
       relations: ['user'],
     });
-    
+
     if (!vendor) {
       throw new NotFoundException(`Vendor with ID ${id} not found`);
     }
-    
+
     return vendor;
   }
+
+
+  // Get vendors with expired SLAs
+  async getVendorsWithExpiredSLAs(): Promise<Vendor[]> {
+    return this.vendorRepository
+      .createQueryBuilder('vendor')
+      .where('vendor.responseSlaHours < :now', { now: new Date() })
+      .getMany();
+  }
+
+
+  async update(id: string, updateVendorDto: Partial<Vendor>): Promise<UpdateResult> {
+    return this.vendorRepository.update(id, updateVendorDto);
+  }
+
 }

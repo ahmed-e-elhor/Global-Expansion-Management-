@@ -10,6 +10,8 @@ import { DatabaseModule } from './database/database.module';
 import { DocumentsModule } from './documents/documents.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { MailModule } from './mail/mail.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -18,6 +20,10 @@ import { AnalyticsModule } from './analytics/analytics.module';
     }),
     // MySQL Database Configuration
     DatabaseModule,
+    
+    // Mail and Tasks Modules
+    MailModule,
+    TasksModule,
     
     // MongoDB Configuration
     // MongooseModule.forRootAsync({

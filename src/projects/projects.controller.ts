@@ -54,8 +54,9 @@ export class ProjectsController {
         // Verify the project belongs to the user
         await this.projectsService.findOne(projectId, req.user.id);
         
+        const project = await this.projectsService.findById(projectId, ['client', 'client.user']);
         // Rebuild vendor matches
-        return this.projectsService.rebuildVendorMatches(projectId);
+        return this.projectsService.rebuildVendorMatches(project);
     }
 
     

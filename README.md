@@ -23,11 +23,33 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Global Expansion Management is a comprehensive platform built with [NestJS](https://github.com/nestjs/nest) for managing vendor relationships, projects, and compliance documentation.
 
-## Project setup
+## Features
+
+- **Vendor Management**: Track and manage vendor information and compliance documents
+- **Project Management**: Manage projects and their associated vendors
+- **Document Management**: Store and organize vendor documents and compliance certificates
+- **Email Notifications**: Automatic email notifications for matches and SLA expirations
+- **Scheduled Tasks**: Automated daily tasks for refreshing matches and checking SLAs
+
+## Project Setup
+
+### Prerequisites
+
+- Node.js (v16 or later)
+- npm or yarn
+- MySQL database
+- Redis (for background jobs)
+- Mailgun account (for email notifications)
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
 
 ```bash
+npm install
 $ npm install
 ```
 
@@ -93,6 +115,34 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 - Website - [https://nestjs.com](https://nestjs.com/)
 - Twitter - [@nestframework](https://twitter.com/nestframework)
 
+## Configuration
+
+1. Copy `.env.example` to `.env` and update the values:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Configure your database, Mailgun, and Redis settings in the `.env` file.
+
+## Running the Application
+
+```bash
+# Development
+$ npm run start
+
+# Watch mode
+$ npm run start:dev
+
+# Production mode
+$ npm run build
+$ npm run start:prod
+```
+
+## Documentation
+
+- [API Documentation](./API.md)
+- [Notifications & Scheduling](./NOTIFICATIONS.md)
+
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is [MIT licensed](LICENSE).

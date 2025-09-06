@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException, ForbiddenException, Logger } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, ForbiddenException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In, Not, IsNull } from 'typeorm';
+import { MailService } from '../mail/mail.service';
 import { Project, ProjectStatus } from './entities/project.entity';
 import { VendorMatch } from './entities/vendor-match.entity';
 import { Client } from '../clients/entities/client.entity';
@@ -21,9 +22,28 @@ export class ProjectsService {
     private vendorMatchRepository: Repository<VendorMatch>,
     @InjectRepository(Vendor)
     private vendorRepository: Repository<Vendor>,
+    private readonly mailService: MailService,
   ) { }
 
 
+  /**
+   * Find all active projects
+   * @param relations - Optional relations to include
+   * @returns Promise<Project[]> - Array of active projects
+   */
+  async findActive(relations: string[] = ['client', 'client.user']): Promise<Project[]> {
+    return this.projectsRepository.find({
+      where: { status: ProjectStatus.ACTIVE },
+      relations,
+    });
+  }
+
+  /**
+   * Find a project by ID with optional relations
+   * @param id - Project ID
+   * @param relations - Optional relations to include
+   * @returns Promise<Project>
+   */
   async findById(id: string, relations: string[] = ['client', 'client.user']): Promise<Project> {
     const project = await this.projectsRepository.findOne({
       where: { id },
@@ -42,11 +62,11 @@ export class ProjectsService {
    * @param projectId - The ID of the project to rebuild matches for
    * @returns Promise<RebuildMatchesResponseDto>
    */
-  async rebuildVendorMatches(projectId: string): Promise<RebuildMatchesResponseDto> {
-    this.logger.log(`Rebuilding vendor matches for project ${projectId}`);
+  async rebuildVendorMatches(project: Project): Promise<RebuildMatchesResponseDto> {
+    this.logger.log(`Rebuilding vendor matches for project ${project.id}`);
 
     // 1. Get the project with required relations
-    const project = await this.findById(projectId, ['client', 'client.user']);
+    // const project = await this.findById(projectId, ['client', 'client.user']);
 
     // 2. Find all vendors that match the project's country and have at least one service in common
     const matchingVendors = await this.findMatchingVendors(project);
@@ -55,68 +75,19 @@ export class ProjectsService {
     const vendorScores = await this.calculateVendorScores(project, matchingVendors);
 
     // 4. Save the matches to the database
-    const savedMatches = await this.saveVendorMatches(projectId, vendorScores);
+    const savedMatches = await this.saveVendorMatches(project.id, vendorScores);
 
     // 5. Map to DTOs for the response
     const matchDtos = savedMatches.map(match => this.mapToVendorMatchDto(match));
 
     return {
-      projectId,
+      projectId:project.id,
       matchesCount: matchDtos.length,
       matches: matchDtos
     };
   }
 
-  /**
-   * Find vendors that match the project's country and have at least one service in common
-   */
-  /**
-   * Find vendors that match the project's country and have at least one service in common
-   */
-  // private async findMatchingVendors(project: Project): Promise<Array<{
-  //   id: string;
-  //   country: string;
-  //   services: string[];
-  //   rating: number;
-  //   slaCompliance: number;
-  // }>> {
-  //   // First, find all vendors that support the project's country
-  //   const vendors = await this.vendorRepository
-  //     .createQueryBuilder('vendor')
-  //     .where('FIND_IN_SET(:country, vendor.countries_supported) > 0', {
-  //       country: project.country,
-  //     })
-  //     .andWhere('vendor.user IS NOT NULL') // Only vendors with user accounts
-  //     .getMany();
 
-  //   // Filter vendors by service overlap and calculate SLA compliance
-  //   return vendors
-  //     .map(vendor => {
-  //       // Find overlapping services
-  //       const overlappingServices = vendor.services_offered.filter(service => 
-  //         project.services_needed.includes(service)
-  //       );
-
-  //       // Only include vendors with at least one matching service
-  //       if (overlappingServices.length === 0) {
-  //         return null;
-  //       }
-
-  //       // Calculate SLA compliance based on response time
-  //       // Assuming lower responseSlaHours is better (faster response)
-  //       // Convert to a 0-1 scale where 24h = 0.5, 1h = 1.0, 48h = 0.0, etc.
-  //       const slaCompliance = Math.max(0, 1 - (vendor.responseSlaHours / 48));
-
-  //       return {
-  //         id: vendor.id,
-  //         country: project.country, // Use project's country since we've already filtered by it
-  //         services: vendor.services_offered,
-  //         rating: parseFloat(vendor.rating.toFixed(2)),
-  //         slaCompliance: parseFloat(slaCompliance.toFixed(2)),
-  //       };
-  //     })
-  //     .filter(Boolean); // Remove null entries (vendors with no matching services)
-  // }
 
   private async findMatchingVendors(project: Project): Promise<Array<{
     id: string;
@@ -202,7 +173,36 @@ export class ProjectsService {
     await this.vendorMatchRepository.delete({ projectId });
 
     // Save new matches
-    return this.vendorMatchRepository.save(matchesToSave);
+    const savedMatches = await this.vendorMatchRepository.save(matchesToSave);
+    
+    // Send email notifications for new matches
+    try {
+      const project = await this.projectsRepository.findOne({
+        where: { id: projectId },
+        relations: ['client','client.user']
+      });
+
+      if (project && project.client?.user.email) {
+        // Get vendor names for the email
+        const vendorIds = matchesToSave
+          .map(match => match.vendorId)
+          .join(', ');
+        
+        // Send notification email
+        await this.mailService.sendMatchNotification(
+          project.client.user.email,
+          project.id,
+          vendorIds,
+          `Found ${matchesToSave.length} new vendor matches for your project.`
+        );
+        
+        this.logger.log(`Sent match notification email for project ${projectId}`);
+      }
+    } catch (error) {
+      this.logger.error(`Failed to send match notification email: ${error.message}`, error.stack);
+    }
+    
+    return savedMatches;
   }
 
 
