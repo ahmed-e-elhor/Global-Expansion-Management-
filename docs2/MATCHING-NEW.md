@@ -1,2 +1,0 @@
-# Vendor Matching Algorithm
-
