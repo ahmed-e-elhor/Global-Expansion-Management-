@@ -12,6 +12,10 @@ import { VendorsModule } from './vendors/vendors.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { MailModule } from './mail/mail.module';
 import { TasksModule } from './tasks/tasks.module';
+import { CountriesModule } from './countries/countries.module';
+// import { DatabaseSeederModule } from './database/database-seeder.module';
+import { ServicesModule } from './services/services.module';
+
 
 @Module({
   imports: [
@@ -45,9 +49,12 @@ import { TasksModule } from './tasks/tasks.module';
     // Feature Modules
     UsersModule,
     AuthModule,
+    ServicesModule,
     DocumentsModule,
     VendorsModule,
     AnalyticsModule,
+    CountriesModule,
+    // DatabaseSeederModule,
   ],
   controllers: [AppController],
   providers: [AppService],

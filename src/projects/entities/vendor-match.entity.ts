@@ -20,6 +20,15 @@ export class VendorMatch {
   @Column({ type: 'boolean', default: false })
   isAccepted: boolean;
 
+  @Column({ type: 'integer', default: 0 })
+  servicesOverlap: number;
+
+  @Column({ type: 'decimal', precision: 3, scale: 2, default: 0 })
+  vendorRating: number;
+
+  @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
+  slaWeight: number;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -1,5 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { VendorMatch } from '../../projects/entities/vendor-match.entity';
+import { Service } from '../../services/entities/service.entity';
+import { Country } from '../../countries/entities/country.entity';
 
 @Entity('vendors')
 export class Vendor {
@@ -9,11 +11,21 @@ export class Vendor {
   @Column()
   name: string;
 
-  @Column('simple-array')
-  countries_supported: string[];
+  @ManyToMany(() => Country, { eager: true })
+  @JoinTable({
+    name: 'vendor_countries',
+    joinColumn: { name: 'vendor_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'country_id', referencedColumnName: 'id' }
+  })
+  countries_supported: Country[];
 
-  @Column('simple-array')
-  services_offered: string[];
+  @ManyToMany(() => Service, service => service.vendors, { eager: true })
+  @JoinTable({
+    name: 'vendor_services',
+    joinColumn: { name: 'vendor_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'service_id', referencedColumnName: 'id' }
+  })
+  services: Service[];
 
   @Column({ type: 'decimal', precision: 3, scale: 2, default: 0 })
   rating: number;
