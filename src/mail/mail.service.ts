@@ -26,12 +26,12 @@ export class MailService {
     const config: MailgunConfig = {
       apiKey: this.configService.get<string>('MAILGUN_API_KEY') || '',
       domain: this.configService.get<string>('MAILGUN_DOMAIN') || '',
-      fromEmail: this.configService.get<string>('MAIL_FROM_EMAIL') || '',
-      fromName: this.configService.get<string>('MAIL_FROM_NAME') || '',
+      fromEmail: this.configService.get<string>('MAILGUN_FROM_EMAIL') || '',
+      fromName: this.configService.get<string>('MAILGUN_FROM_NAME') || 'Expanders360',
     };
 
-    if (!config.apiKey || !config.domain) {
-      throw new Error('Mailgun API key and domain must be configured');
+    if (!config.apiKey || !config.domain || !config.fromEmail) {
+      throw new Error('Mailgun API key, domain, and from email must be configured');
     }
 
     const mailgun = new Mailgun({
@@ -43,7 +43,7 @@ export class MailService {
 
     
     this.domain = config.domain;
-    this.from = `"${config.fromName}" <${config.fromEmail}>`;
+    this.from = `${config.fromName} <${config.fromEmail}>`;
   }
 
   private async compileTemplate(templateName: string, context: any): Promise<string> {
