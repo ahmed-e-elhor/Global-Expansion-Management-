@@ -56,7 +56,30 @@ A comprehensive platform for managing global vendor relationships, projects, and
    ```
 
 3. **Database Setup**
+
+   **For Development (using synchronize):**
    ```bash
+   # Set NODE_ENV=development in your .env file
+   NODE_ENV=development
+   
+   # Start the application (tables will be auto-created)
+   npm run start:dev
+   
+   # Seed initial data (countries and services)
+   npm run seed
+   ```
+
+   **For Production (using migrations):**
+   ```bash
+   # Set NODE_ENV=production in your .env file
+   NODE_ENV=production
+   
+   # Run database migrations to create tables
+   npm run migration:run
+   
+   # Verify migration status
+   npm run migration:show
+   
    # Seed initial data (countries and services)
    npm run seed
    ```
@@ -70,6 +93,96 @@ A comprehensive platform for managing global vendor relationships, projects, and
    npm run build
    npm run start:prod
    ```
+
+## 🗄️ Database Migrations
+
+This project uses TypeORM migrations for production database management 
+
+### Migration Commands
+
+```bash
+# Show current migration status
+npm run migration:show
+
+# Run pending migrations
+npm run migration:run
+
+# Generate new migration (after entity changes)
+npm run migration:generate src/migrations/MigrationName
+
+# Revert last migration (if needed)
+npm run migration:revert
+```
+
+### Initial Migration Setup
+
+The project includes a comprehensive initial migration (`1725785320000-InitialMigration.ts`) that creates:
+
+- **7 Main Tables**: users, countries, services, clients, vendors, projects, vendor_matches
+- **3 Junction Tables**: vendor_countries, vendor_services, project_services  
+- **All Relationships**: Foreign keys, indexes, and constraints
+- **Enums**: User roles (client, admin, analyst), project status, vendor status
+
+### Production Deployment
+
+1. **Set Environment**
+   ```bash
+   NODE_ENV=production
+   ```
+
+2. **Run Initial Migration**
+   ```bash
+   npm run migration:run
+   ```
+
+3. **Verify Setup**
+   ```bash
+   npm run migration:show
+   # Should show: [X] InitialMigration1725785320000
+   ```
+
+4. **Start Application**
+   ```bash
+   npm run start:prod
+   # Migrations will auto-run on future deployments
+   ```
+
+### Future Schema Changes
+
+When you modify entities and need to update the database schema:
+
+1. **Make Entity Changes** in development with `NODE_ENV=development`
+
+2. **Generate Migration**
+   ```bash
+   npm run migration:generate src/migrations/AddNewFeature
+   ```
+
+3. **Review Generated SQL** - Always check the migration file before applying
+
+4. **Test Migration**
+   ```bash
+   npm run migration:run
+   npm run migration:show
+   ```
+
+5. **Deploy to Production**
+   ```bash
+   # Commit migration file to version control
+   git add src/migrations/
+   git commit -m "Add new feature migration"
+   
+   # Deploy and run migration
+   npm run migration:run
+   ```
+
+### Important Migration Notes
+
+- **Never use `synchronize: true` in production**
+- **Always review generated migrations before applying**
+- **Test migrations on staging environment first**
+- **Migrations are irreversible in production - plan carefully**
+- **Keep all migration files in version control**
 
 ### 🐳 Docker Development Setup
 
