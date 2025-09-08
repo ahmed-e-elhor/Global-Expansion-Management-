@@ -15,10 +15,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         password: configService.get<string>('MYSQL_PASSWORD'),
         database: configService.get<string>('MYSQL_DATABASE'),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: true, // Set to false in production
-        logging: true, // Enable query logging
-        logger: 'advanced-console', // Use advanced console logger
-        maxQueryExecutionTime: 1000 // Log queries that take more than 1 second
+        synchronize: configService.get<string>('NODE_ENV') === 'development',
+        migrations: [__dirname + '/../migrations/*{.ts,.js}'],
+        migrationsRun: configService.get<string>('NODE_ENV') === 'production',
+        logging: configService.get<string>('NODE_ENV') === 'development',
+        logger: 'advanced-console',
+        maxQueryExecutionTime: 1000
       }),
     }),
   ],

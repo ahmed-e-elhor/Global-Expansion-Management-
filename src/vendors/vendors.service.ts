@@ -5,6 +5,8 @@ import { Vendor } from './entities/vendor.entity';
 import { CreateVendorDto } from './dto/create-vendor.dto';
 import { User } from '../users/entities/user.entity';
 import { UpdateResult } from 'typeorm/browser';
+import { Service } from '../services/entities/service.entity';
+import { Country } from '../countries/entities/country.entity';
 
 @Injectable()
 export class VendorsService {
@@ -14,13 +16,25 @@ export class VendorsService {
   ) { }
 
   async create(createVendorDto: CreateVendorDto): Promise<Vendor> {
-    // Ensure rating is a number and has a default value if not provided
-    const vendorData = {
-      ...createVendorDto,
-      rating: createVendorDto.rating || 0,
-    };
+    const { serviceIds, countries, ...vendorData } = createVendorDto;
 
-    const vendor = this.vendorRepository.create(vendorData);
+    // Create the vendor with basic data
+    const vendor = this.vendorRepository.create({
+      ...vendorData,
+      rating: vendorData.rating || 0,
+    });
+
+    // If serviceIds are provided, create the vendor-services relationships
+    if (serviceIds && serviceIds.length > 0) {
+      vendor.services = serviceIds.map(id => ({ id } as Service));
+    }
+
+    // If countries are provided, create the vendor-countries relationships
+    if (countries && countries.length > 0) {
+      vendor.countries_supported = countries.map(id => ({ id } as Country));
+    }
+
+    // Save the vendor with all relationships
     return this.vendorRepository.save(vendor);
   }
 
@@ -51,7 +65,9 @@ export class VendorsService {
   }
 
 
-  async update(id: string, updateVendorDto: Partial<Vendor>): Promise<UpdateResult> {
+  async update(id: string,updateVendorDto: Partial<Vendor>):
+    Promise<UpdateResult> {
+
     return this.vendorRepository.update(id, updateVendorDto);
   }
 

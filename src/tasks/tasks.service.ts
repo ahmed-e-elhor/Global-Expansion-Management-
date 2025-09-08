@@ -1,21 +1,18 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Cron, SchedulerRegistry } from '@nestjs/schedule';
-import type { Queue } from 'bull';
-import { InjectQueue } from '@nestjs/bull';
+import { Cron } from '@nestjs/schedule';
 import { ProjectsService } from '../projects/projects.service';
 import { VendorsService } from 'src/vendors/vendors.service';
+import { VendorMatchingService } from 'src/projects/vendor-matching.service';
 
 @Injectable()
 export class TasksService implements OnModuleInit {
   private readonly logger = new Logger(TasksService.name);
 
   constructor(
-    private schedulerRegistry: SchedulerRegistry,
-    @InjectQueue('tasks') private tasksQueue: Queue,
     private readonly projectsService: ProjectsService,
     private readonly vendorsService: VendorsService,
-    private readonly configService: ConfigService,
+    private readonly vendorMatchingService: VendorMatchingService
+    ,
 
   ) { }
 
@@ -40,13 +37,18 @@ export class TasksService implements OnModuleInit {
   async refreshAllActiveProjects() {
     try {
       // Get all active projects with required relations
-      const activeProjects = await this.projectsService.findActive(['client', 'client.user']);
+      const activeProjects = await this.projectsService.findActive([
+        'client', 
+        'client.user',
+        'services',
+        'country'
+    ]);
 
       // Process each project sequentially to avoid overwhelming the system
       for (const project of activeProjects) {
         try {
           this.logger.log(`Refreshing matches for project: ${project.id}`);
-          await this.projectsService.rebuildVendorMatches(project);
+          await this.vendorMatchingService.findAndScoreVendors(project);
           this.logger.log(`Successfully refreshed matches for project: ${project.id}`);
         } catch (error) {
           // Log error but continue with other projects

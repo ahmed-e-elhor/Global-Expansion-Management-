@@ -1,19 +1,21 @@
 import { IsString, IsNotEmpty, IsArray, IsNumber, IsEnum, IsOptional, IsUUID } from 'class-validator';
 import { ProjectStatus } from '../entities/project.entity';
+import { Type } from 'class-transformer';
 
 export class CreateProjectDto {
   // // @IsUUID()
   // // // @IsNotEmpty()
   // clientId: string;
 
-  @IsString()
   @IsNotEmpty()
-  country: string;
+  @IsUUID()
+  country_id: string;
 
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID('all', { each: true })
   @IsNotEmpty()
-  services_needed: string[];
+  @Type(() => String)
+  serviceIds: string[];
 
   @IsNumber()
   @IsNotEmpty()

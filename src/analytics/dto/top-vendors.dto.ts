@@ -1,11 +1,10 @@
-export class TopVendorDTO {
-  vendorId: string;
-  vendorName: string;
-  avgScore: number;
+export class VendorSummaryDTO {
+  id: string;
+  name: string;
 }
 
 export class CountryAnalyticsDTO {
-  country: string;
-  topVendors: TopVendorDTO[];
-  researchDocsCount: number;
+  countryCode: string;
+  vendors: VendorSummaryDTO[];
+  documentCount: number;
 }

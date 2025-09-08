@@ -13,6 +13,7 @@ import {
   UsePipes
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
+import { VendorMatchingService } from './vendor-matching.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -24,7 +25,10 @@ import { RebuildMatchesResponseDto } from './dto/vendor-match.dto';
 @UseGuards(JwtAuthGuard)
 @Roles(UserRole.CLIENT)
 export class ProjectsController {
-    constructor(private readonly projectsService: ProjectsService) { }
+    constructor(
+        private readonly projectsService: ProjectsService,
+        private readonly vendorMatchingService: VendorMatchingService
+    ) {}
 
     @Post()
     async create(
@@ -51,18 +55,33 @@ export class ProjectsController {
         @Param('id', ParseUUIDPipe) projectId: string,
         @Req() req
     ): Promise<RebuildMatchesResponseDto> {
-        // Verify the project belongs to the user
+        // Verify the project belongs to the user and load it with required relations
         await this.projectsService.findOne(projectId, req.user.id);
+        const project = await this.projectsService.findById(projectId, [
+            'client', 
+            'client.user',
+            'services',
+            'country'
+        ]);
         
-        const project = await this.projectsService.findById(projectId, ['client', 'client.user']);
-        // Rebuild vendor matches
-        return this.projectsService.rebuildVendorMatches(project);
+        // Use the optimized vendor matching service
+        const matches = await this.vendorMatchingService.findAndScoreVendors(project);
+        
+        // Update project's last updated date
+        project.updatedAt = new Date();
+        await this.projectsService.update(projectId, project);
+
+        return {
+            projectId: project.id,
+            matches,
+            matchesCount: matches.length
+        };
     }
 
     
     @Get(':id/matches')
     async listMatches(@Param('id', ParseUUIDPipe) projectId: string) {
-        return this.projectsService.listMatches(projectId);
+        return this.vendorMatchingService.listMatches(projectId);
     }
 
 }
