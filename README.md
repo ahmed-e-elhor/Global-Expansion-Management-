@@ -613,7 +613,7 @@ For a project requiring 3 services in the UK:
   - Services: 3 * 2 = 6
   - Rating: 4.5 
   - SLA: ((168-24)/16.8) = 0.86
-  - **Total Score: 10.86**
+  - **Total Score: 11.36**
 
 - **Vendor B**: 2 matching services, 5.0 rating, 48h SLA
   - Services: 2 * 2 = 4
