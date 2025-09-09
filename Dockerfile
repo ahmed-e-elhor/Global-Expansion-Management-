@@ -2,6 +2,8 @@ FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
+RUN npm install -g @nestjs/cli ts-node typescript
+
 # Copy package files
 COPY package*.json ./
 
