@@ -30,9 +30,9 @@ export class MailService {
       fromName: this.configService.get<string>('MAILGUN_FROM_NAME') || 'Expanders360',
     };
 
-    if (!config.apiKey || !config.domain || !config.fromEmail) {
-      throw new Error('Mailgun API key, domain, and from email must be configured');
-    }
+    // if (!config.apiKey || !config.domain || !config.fromEmail) {
+    //   throw new Error('Mailgun API key, domain, and from email must be configured');
+    // }
 
     const mailgun = new Mailgun({
       apiKey: config.apiKey,
