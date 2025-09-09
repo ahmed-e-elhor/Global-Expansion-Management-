@@ -2,25 +2,20 @@ FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
-# Install NestJS CLI and ts-node globally
-RUN npm install -g @nestjs/cli ts-node typescript
-
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies with --legacy-peer-deps flag
-RUN npm install --legacy-peer-deps
+# Install dependencies
+RUN npm install --legacy-peer-deps --only=production
 
-# Copy application files
+# Copy source files
 COPY . .
+
+# Build app
+RUN npm run build
 
 # Expose NestJS default port
 EXPOSE 3000
 
-# Set NODE_ENV to development and enable polling
-ENV NODE_ENV=development
-ENV CHOKIDAR_USEPOLLING=true
-ENV WATCHPACK_POLLING=true
-
-# Run in development mode with nodemon
-CMD ["npm", "run", "start:dev:nodemon"]
+# Run in production mode
+CMD ["npm", "run", "start:prod"]
