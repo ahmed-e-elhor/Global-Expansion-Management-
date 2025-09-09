@@ -33,7 +33,7 @@ export class MailService {
     // if (!config.apiKey || !config.domain || !config.fromEmail) {
     //   throw new Error('Mailgun API key, domain, and from email must be configured');
     // }
-
+    console.log('congig mailgun',config);
     const mailgun = new Mailgun({
       apiKey: config.apiKey,
       domain: config.domain,
