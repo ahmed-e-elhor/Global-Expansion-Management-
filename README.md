@@ -1,5 +1,9 @@
 # Global Expansion Management Platform
+## Deplayment Link 
 
+[global-expansion-management-production.up.railway.app](https://global-expansion-management-production.up.railway.app)
+
+## Tech Stack
 [![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
 [![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
@@ -82,7 +86,11 @@ A comprehensive platform for managing global vendor relationships, projects, and
    
    # Seed initial data (countries and services)
    npm run seed
+
+   # Seed for railway run this command
+   node dist/seeders/standalone-seed.js
    ```
+   
 
 4. **Run the application**
    ```bash
@@ -306,6 +314,21 @@ For local development with hot reload using Docker:
 - **Projects** → **Documents**: One-to-Many (stored in MongoDB, linked by projectId)
 
 ## 🔧 API Endpoints
+
+- Postman Collection Link: 
+[https://documenter.getpostman.com/view/37483025/2sB3HnKfMx](https://documenter.getpostman.com/view/37483025/2sB3HnKfMx)
+
+- Client account for testing 
+```json
+"email":"client@mail.com",
+"password" : "testPass",
+```
+
+- Admin account for testing 
+```json
+"email":"admin@mail.com",
+"password" : "testPass",
+```
 
 ### Authentication
 ```http
