@@ -595,7 +595,7 @@ The system uses a sophisticated scoring algorithm to match vendors with projects
 ### Final Score Calculation
 
 ```typescript
-score = (servicesOverlap * 0.6) + (vendorRating * 0.3) + (slaWeight * 0.1)
+score = (servicesOverlap * 2) + (vendorRating ) + (slaWeight )
 ```
 
 ### Matching Process
@@ -610,16 +610,16 @@ score = (servicesOverlap * 0.6) + (vendorRating * 0.3) + (slaWeight * 0.1)
 
 For a project requiring 3 services in the UK:
 - **Vendor A**: 3 matching services, 4.5 rating, 24h SLA
-  - Services: 3 * 0.6 = 1.8
-  - Rating: 4.5 * 0.3 = 1.35  
-  - SLA: ((168-24)/16.8) * 0.1 = 0.86
-  - **Total Score: 4.01**
+  - Services: 3 * 2 = 6
+  - Rating: 4.5 
+  - SLA: ((168-24)/16.8) = 0.86
+  - **Total Score: 10.86**
 
 - **Vendor B**: 2 matching services, 5.0 rating, 48h SLA
-  - Services: 2 * 0.6 = 1.2
-  - Rating: 5.0 * 0.3 = 1.5
-  - SLA: ((168-48)/16.8) * 0.1 = 0.71
-  - **Total Score: 3.41**
+  - Services: 2 * 2 = 4
+  - Rating: 5.0 
+  - SLA: ((168-48)/16.8) = 0.71
+  - **Total Score: 9.71**
 
 Vendor A would rank higher despite lower rating due to better service overlap.
 
