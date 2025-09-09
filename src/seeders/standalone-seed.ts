@@ -18,19 +18,34 @@ async function runStandaloneSeeder() {
   console.log('🚀 Starting standalone database seeding (MySQL only)...');
 
   const configService = new ConfigService();
+  const isProd = configService.get<string>('NODE_ENV') === 'production';
+  const dbUrl = configService.get<string>('DATABASE_URL');
 
-  // Create MySQL DataSource directly
-  const dataSource = new DataSource({
-    type: 'mysql',
-    host: configService.get('MYSQL_HOST') || 'localhost',
-    port: parseInt(configService.get('MYSQL_PORT')!) || 3307,
-    username: configService.get('MYSQL_USERNAME') || 'root',
-    password: configService.get('MYSQL_PASSWORD') || '1234',
-    database: configService.get('MYSQL_DATABASE') || 'mysql_expanderdb',
-    entities: [Country, Service, Project, Vendor, VendorMatch, Client, User],
-    synchronize: false, // Don't auto-sync in production
-    logging: false,
-  });
+  let dataSourceOptions;
+
+  if (dbUrl) {
+    dataSourceOptions = {
+      type: 'mysql',
+      url: dbUrl,
+      entities: [Country, Service, Project, Vendor, VendorMatch, Client, User],
+      synchronize: false,
+      logging: false,
+    } as const;
+  } else {
+    dataSourceOptions = {
+      type: 'mysql',
+      host: configService.get('MYSQL_HOST') || 'localhost',
+      port: parseInt(configService.get('MYSQL_PORT') || '3306', 10),
+      username: configService.get('MYSQL_USER') || 'root',
+      password: configService.get('MYSQL_PASSWORD') || '',
+      database: configService.get('MYSQL_DATABASE') || 'test',
+      entities: [Country, Service, Project, Vendor, VendorMatch, Client, User],
+      synchronize: false,
+      logging: false,
+    } as const;
+  }
+
+  const dataSource = new DataSource(dataSourceOptions);
 
   try {
     // Initialize database connection
@@ -47,7 +62,7 @@ async function runStandaloneSeeder() {
         name: 'United Kingdom'
       },
       {
-        code: 'AE', 
+        code: 'AE',
         name: 'United Arab Emirates'
       },
       {
