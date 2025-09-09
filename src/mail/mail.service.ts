@@ -24,10 +24,10 @@ export class MailService {
 
   constructor(private configService: ConfigService) {
     const config: MailgunConfig = {
-      apiKey: this.configService.get<string>('MAILGUN_API_KEY') || '',
-      domain: this.configService.get<string>('MAILGUN_DOMAIN') || '',
-      fromEmail: this.configService.get<string>('MAILGUN_FROM_EMAIL') || '',
-      fromName: this.configService.get<string>('MAILGUN_FROM_NAME') || 'Expanders360',
+      apiKey: process.env.MAILGUN_API_KEY || '',
+      domain: process.env.MAILGUN_DOMAIN || '',
+      fromEmail: process.env.MAILGUN_FROM_EMAIL || '',
+      fromName: process.env.MAILGUN_FROM_NAME || 'Expanders360',
     };
 
     // if (!config.apiKey || !config.domain || !config.fromEmail) {
